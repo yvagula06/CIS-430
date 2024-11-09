@@ -1,0 +1,100 @@
+USE master;
+-- Create a db named COMPANY_yVagula. do NOT use master db.
+IF DB_ID('COMPANY_yVagula') IS NULL
+CREATE DATABASE COMPANY_yVagula;
+GO
+-- Use created db
+USE COMPANY_yVagula;
+GO
+
+-- Use created db
+USE COMPANY_yVagula;
+GO
+-- Drop table, removes Emp_Test table & data
+IF OBJECT_ID('dbo.EMP_Test') IS NOT NULL
+DROP TABLE dbo.EMP_Test
+-- Create table named Emp_Test with correct row names & sizes
+CREATE TABLE Emp_Test (
+    FName VARCHAR(50),
+    MInit CHAR(1),
+    LName VARCHAR(50),
+    SSN CHAR(9),
+    BDate DATE,
+    Address VARCHAR(100),
+    Sex CHAR(1),
+    Salary DECIMAL(10, 2),
+    SuperSSN CHAR(9),
+    DNo INT
+);
+GO
+
+-- Insert duplicate tuple values into the Emp_Test table
+INSERT INTO Emp_Test VALUES ('John', 'B', 'Smith', '123456789', '1955-01-09', '731 Fondren, Houston, TX', 'M', 30000, '987654321', 5);
+INSERT INTO Emp_Test VALUES ('John', 'B', 'Smith', '123456789', '1955-01-09', '731 Fondren, Houston, TX', 'M', 30000, '987654321', 5);
+
+-- Insert invalid PK column values, duplicate SSN and Null SSN, into the Emp_Test table
+INSERT INTO Emp_Test VALUES ('Jane', 'D', 'Doe', '123456789', '1980-05-12', '123 Elm St, Houston, TX', 'F', 45000, '987654321', 5);
+INSERT INTO Emp_Test VALUES ('Bob', 'C', 'Brown', NULL, '1975-03-22', '456 Oak St, Houston, TX', 'M', 50000, '987654321', 5);
+
+-- Insert Null values into the ‘LName’ column
+INSERT INTO Emp_Test VALUES ('Alice', 'A', NULL, '987654321', '1990-08-15', '789 Pine St, Houston, TX', 'F', 40000, '987654321', 5);
+
+-- Insert invalid data into ‘DNo’
+INSERT INTO Emp_Test VALUES ('Eve', 'E', 'Evans', '654321987', '1965-12-30', '321 Birch St, Houston, TX', 'F', 35000, '987654321', NULL);
+
+CREATE TABLE EMPLOYEE (
+    FName VARCHAR(50),
+    MInit CHAR(1),
+    LName VARCHAR(50),
+    SSN CHAR(9) PRIMARY KEY,
+    BDate DATE,
+    Address VARCHAR(100),
+    Sex CHAR(1),
+    Salary DECIMAL(10, 2),
+    SuperSSN CHAR(9),
+    DNo INT,
+    FOREIGN KEY (SuperSSN) REFERENCES EMPLOYEE(SSN),
+    FOREIGN KEY (DNo) REFERENCES DEPARTMENT(DNumber)
+);
+
+CREATE TABLE DEPARTMENT (
+    DName VARCHAR(50),
+    DNumber INT PRIMARY KEY,
+    MgrSSN CHAR(9),
+    MgrStartDate DATE,
+    FOREIGN KEY (MgrSSN) REFERENCES EMPLOYEE(SSN)
+);
+
+CREATE TABLE DEPENDENT (
+    ESSN CHAR(9),
+    Dependent_Name VARCHAR(50),
+    Sex CHAR(1),
+    BDate DATE,
+    Relationship VARCHAR(50),
+    PRIMARY KEY (ESSN, Dependent_Name),
+    FOREIGN KEY (ESSN) REFERENCES EMPLOYEE(SSN)
+);
+
+CREATE TABLE DEPT_LOCATIONS (
+    DNumber INT,
+    DLocation VARCHAR(50),
+    PRIMARY KEY (DNumber, DLocation),
+    FOREIGN KEY (DNumber) REFERENCES DEPARTMENT(DNumber)
+);
+
+CREATE TABLE PROJECT (
+    PName VARCHAR(50),
+    PNumber INT PRIMARY KEY,
+    PLocation VARCHAR(50),
+    DNum INT,
+    FOREIGN KEY (DNum) REFERENCES DEPARTMENT(DNumber)
+);
+
+CREATE TABLE WORKS_ON (
+    ESSN CHAR(9),
+    PNo INT,
+    Hours DECIMAL(3,1),
+    PRIMARY KEY (ESSN, PNo),
+    FOREIGN KEY (ESSN) REFERENCES EMPLOYEE(SSN),
+    FOREIGN KEY (PNo) REFERENCES PROJECT(PNumber)
+);
