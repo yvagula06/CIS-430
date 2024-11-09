@@ -1,0 +1,4 @@
+Syllabus, Lecture Notes, and Lab Assignments are available here - https://eecs.csuohio.edu/~sschung/cis430/CIS430Summer24.html
+---------------------------------------------------------------------------
+You can also access the site above from her Big Data Research Lab Website - https://eecs.csuohio.edu/~sschung/#Teaching
+---------------------------------------------------------------------------
